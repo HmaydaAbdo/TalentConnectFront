@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:8080/talentConnect/api/'
+  apiUrl: 'https://talentconnectbackend-production.up.railway.app/talentConnect/api/'
 };
