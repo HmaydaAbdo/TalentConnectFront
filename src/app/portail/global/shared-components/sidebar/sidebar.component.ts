@@ -50,7 +50,7 @@ export class SidebarComponent implements OnInit { // Implement OnInit
 
   sidebarItems: SidebarItem[] = [
     { label: 'Metiers', icon: 'pi pi-briefcase', routerLink: '/portail/metiers' },
-    { label: 'Candidatures', icon:'pi-id-card',routerLink: '/portail/candidatures' }
+    { label: 'Candidatures', icon:'pi pi-id-card',routerLink: '/portail/candidatures' }
   ];
 
   filteredSidebarItems: SidebarItem[] = [];
