@@ -17,7 +17,7 @@ import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
 import { TableModule } from "primeng/table";
 import { TooltipModule } from "primeng/tooltip";
-import { DatePipe } from '@angular/common';
+
 
 @Component({
   selector: 'app-candidature-detail',
@@ -30,7 +30,6 @@ import { DatePipe } from '@angular/common';
     ToastModule,
     TableModule,
     TooltipModule,
-    DatePipe
   ],
   templateUrl: './candidature-details.component.html',
   styleUrls: ['./candidature-details.component.scss'],

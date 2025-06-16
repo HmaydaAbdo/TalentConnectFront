@@ -66,12 +66,12 @@
                       icon="pi pi-download" styleClass="p-button-secondary"
                       pTooltip="Télécharger le rapport existant"
                       (click)="downloadReport('phone')"
-                      [disabled]="!candidature?.hasRapportEvaluationTelephonique"></p-button>
-            <p-button *ngIf="candidature?.hasRapportEvaluationTelephonique"
+                      [disabled]="!candidature.hasRapportEvaluationTelephonique"></p-button>
+            <p-button *ngIf="candidature.hasRapportEvaluationTelephonique"
                       icon="pi pi-trash" styleClass="p-button-danger p-button-outlined"
                       pTooltip="Supprimer le rapport existant"
                       (click)="deleteReport('phone')"
-                      [disabled]="!candidature?.hasRapportEvaluationTelephonique"></p-button>
+                      [disabled]="!candidature.hasRapportEvaluationTelephonique"></p-button>
           </div>
         </div>
       </div>
@@ -133,12 +133,12 @@
                       icon="pi pi-download" styleClass="p-button-secondary"
                       pTooltip="Télécharger le rapport existant"
                       (click)="downloadReport('first')"
-                      [disabled]="!candidature?.hasRapportPremiereEvaluationPhysique"></p-button>
+                      [disabled]="!candidature.hasRapportPremiereEvaluationPhysique"></p-button>
             <p-button *ngIf="candidature?.hasRapportPremiereEvaluationPhysique"
                       icon="pi pi-trash" styleClass="p-button-danger p-button-outlined"
                       pTooltip="Supprimer le rapport existant"
                       (click)="deleteReport('first')"
-                      [disabled]="!candidature?.hasRapportPremiereEvaluationPhysique"></p-button>
+                      [disabled]="!candidature.hasRapportPremiereEvaluationPhysique"></p-button>
           </div>
         </div>
       </div>
@@ -184,12 +184,12 @@
                       icon="pi pi-download" styleClass="p-button-secondary"
                       pTooltip="Télécharger le rapport existant"
                       (click)="downloadReport('second')"
-                      [disabled]="!candidature?.hasRapportDeuxiemeEvaluationPhysique"></p-button>
+                      [disabled]="!candidature.hasRapportDeuxiemeEvaluationPhysique"></p-button>
             <p-button *ngIf="candidature?.hasRapportDeuxiemeEvaluationPhysique"
                       icon="pi pi-trash" styleClass="p-button-danger p-button-outlined"
                       pTooltip="Supprimer le rapport existant"
                       (click)="deleteReport('second')"
-                      [disabled]="!candidature?.hasRapportDeuxiemeEvaluationPhysique"></p-button>
+                      [disabled]="!candidature.hasRapportDeuxiemeEvaluationPhysique"></p-button>
           </div>
         </div>
       </div>
