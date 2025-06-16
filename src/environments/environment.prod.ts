@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: '' // L'URL de base du backend Spring Boot en prod
+  apiUrl: 'https://talentconnectbackend-production.up.railway.app/talentConnect/api/'
 };
