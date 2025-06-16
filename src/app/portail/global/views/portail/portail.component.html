@@ -1,0 +1,9 @@
+<app-navbar (openSidebar)="sidebar.openSidebar()"></app-navbar>
+
+<app-sidebar [(sidebarVisible)]="sidebarVisible"></app-sidebar>
+
+<main class="content-area pb-3 bg-gray-50">
+  <router-outlet></router-outlet>
+</main>
+
+

@@ -1,0 +1,58 @@
+
+<div class="loginPage">
+  <div class="background-image"></div>
+
+  <div class="loginCard">
+    <div class="app-title">Talent Connect</div>
+    <div class="app-desc">Le talent sans effort, le recrutement intelligent</div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="login()">
+
+      <div class="form-group">
+        <p-inputGroup>
+          <input pInputText placeholder="Nom d'utilisateur" formControlName="username" class="full-width-input" />
+          <p-inputGroupAddon>
+            <i class="pi pi-user"></i>
+          </p-inputGroupAddon>
+        </p-inputGroup>
+        <small
+          id="username-help"
+          *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched"
+          class="p-error validation-message"
+        >
+          Nom d'utilisateur est requis.
+        </small>
+      </div>
+
+      <div class="form-group">
+        <p-inputGroup>
+          <input pInputText placeholder="Mot de passe" [type]="passwordInputType" formControlName="password" class="full-width-input" />
+          <p-inputGroupAddon>
+            <i [class]="passwordVisible ? 'pi pi-eye-slash' : 'pi pi-eye'" (click)="togglePasswordVisibility()"></i>
+          </p-inputGroupAddon>
+        </p-inputGroup>
+        <small
+          *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+          class="p-error validation-message"
+        >
+          Mot de passe est requis.
+        </small>
+      </div>
+
+      <p-button
+        label="Connection"
+        icon="pi pi-arrow-right"
+        iconPos="right"
+        type="submit"
+        [loading]="isLoading"
+        [disabled]="loginForm.invalid || isLoading"
+        class="full-width-button"
+      ></p-button>
+
+      <div *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </div>
+
+    </form>
+  </div>
+</div>

@@ -1,0 +1,25 @@
+
+
+
+.nav-link {
+  text-decoration: none; /* Toujours pas de soulignement par défaut sur le lien entier */
+  color: var(--text-color, #333333) !important;
+  padding: 0.75rem 1rem;
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+.active-nav-link {
+  border-bottom: none;
+  /* La couleur du texte du lien actif (y compris l'icône) */
+  color: rgba(8, 18, 47, 0.92) !important;
+  /* NE PAS mettre les propriétés text-decoration ici pour ne pas souligner l'icône */
+}
+
+/* NOUVELLE RÈGLE : Cible le span du label UNIQUEMENT quand le lien parent est actif */
+.active-nav-link .nav-label {
+  text-decoration: underline;
+  text-decoration-color: rgb(30, 92, 172); /* Couleur du soulignement */
+  text-underline-offset: 0.7rem;
+  text-decoration-thickness: 1rem;
+  /* Pas besoin de `color` ici si `.active-nav-link` gère déjà la couleur du texte */
+}

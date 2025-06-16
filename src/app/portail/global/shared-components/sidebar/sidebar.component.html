@@ -1,0 +1,85 @@
+<p-sidebar #sidebarRef [(visible)]="sidebarVisible">
+  <ng-template pTemplate="headless">
+    <div class="flex flex-column h-full">
+
+      <div class="flex  justify-content-between ">
+        <span class="inline-flex align-items-center pt-2 pl-4">
+          <img src="assets/logo.png" alt="Your Logo" class="block mx-auto" style="height: 5rem; width: 10.86rem;" />
+        </span>
+        <span class="align-self-start pt-2 pr-2 ">
+          <p-button type="button" (onClick)="closeCallback($event)" icon="pi pi-times" rounded="true" outlined="true" styleClass="h-2rem w-2rem"></p-button>
+        </span>
+      </div>
+
+      <hr class="mt-3 mx-3 border-top-1 border-3 surface-border" />
+
+      <div class="overflow-y-auto">
+        <ul class="list-none p-3 m-0">
+          <ng-container *ngFor="let item of filteredSidebarItems">
+            <li *ngIf="item.separator">
+              <hr class="mb-3 mx-3 border-top-1 border-3 surface-border" />
+            </li>
+
+            <li *ngIf="item.routerLink && !item.items">
+              <a pRipple
+                 [routerLink]="item.routerLink"
+                 routerLinkActive="active-sidebar-link"
+                 class="flex align-items-center cursor-pointer p-3 border-round-xl text-700 hover:bg-blue-50 transition-duration-150 transition-colors p-ripple sidebar-link">
+                <i *ngIf="item.icon" [class]="item.icon + ' mr-2'"></i>
+                <span class="font-medium">{{ item.label }}</span>
+                <span *ngIf="item.badge" [class]="item.badgeClass">{{ item.badge }}</span>
+              </a>
+            </li>
+
+            <li *ngIf="item.items">
+              <div
+                pRipple
+                (click)="toggleMenuItem(item)"
+                [ngClass]="item.styleClass || 'p-3 flex align-items-center justify-content-between text-600 cursor-pointer p-ripple'">
+                <span class="font-medium">{{ item.label }}</span>
+                <i [class]="item.expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i> </div>
+              <ul class="list-none p-0 m-0 overflow-hidden" [ngClass]="{'hidden': !item.expanded}">
+                <ng-container *ngFor="let subItem of item.items">
+                  <li *ngIf="subItem.routerLink && !subItem.items">
+                    <a pRipple
+                       [routerLink]="subItem.routerLink"
+                       routerLinkActive="active-sidebar-link"
+                       class="flex align-items-center cursor-pointer p-3 pl-5 border-round-xl text-700 hover:bg-blue-50 transition-duration-150 transition-colors p-ripple sidebar-link">
+                      <i *ngIf="subItem.icon" [class]="subItem.icon + ' mr-2'"></i>
+                      <span class="font-medium">{{ subItem.label }}</span>
+                      <span *ngIf="subItem.badge" [class]="subItem.badgeClass">{{ subItem.badge }}</span>
+                    </a>
+                  </li>
+
+                  <li *ngIf="subItem.items">
+                    <div
+                      pRipple
+                      (click)="toggleMenuItem(subItem)"
+                      class="flex align-items-center cursor-pointer p-3 pl-5 border-round text-700 hover:bg-blue-50 transition-duration-150 transition-colors p-ripple">
+                      <i *ngIf="subItem.icon" [class]="subItem.icon + ' mr-2'"></i>
+                      <span class="font-medium">{{ subItem.label }}</span>
+                      <i [class]="subItem.expanded ? 'pi pi-chevron-down ml-auto' : 'pi pi-chevron-right ml-auto'"></i>
+                    </div>
+                    <ul class="list-none py-0 pl-3 pr-0 m-0 overflow-hidden" [ngClass]="{'hidden': !subItem.expanded}">
+                      <li *ngFor="let subSubItem of subItem.items">
+                        <a pRipple
+                           [routerLink]="subSubItem.routerLink"
+                           routerLinkActive="active-sidebar-link"
+                           class="flex align-items-center cursor-pointer p-3 pl-7 border-round-xl text-700 hover:bg-blue-50 transition-duration-150 transition-colors p-ripple sidebar-link">
+                          <i *ngIf="subSubItem.icon" [class]="subSubItem.icon + ' mr-2'"></i>
+                          <span class="font-medium">{{ subSubItem.label }}</span>
+                          <span *ngIf="subSubItem.badge" [class]="subSubItem.badgeClass">{{ subSubItem.badge }}</span>
+                        </a>
+                      </li>
+                    </ul>
+                  </li>
+                </ng-container>
+              </ul>
+            </li>
+          </ng-container>
+        </ul>
+      </div>
+
+    </div>
+  </ng-template>
+</p-sidebar>

@@ -1,0 +1,133 @@
+<p-toast></p-toast>
+
+<div class=" p-2 h-screen w-screen overflow-y-scroll">
+
+
+  <div class="flex align-items-center justify-content-between mb-1">
+    <h2 class="text-2xl font-bold">Détails de la Candidature</h2>
+    <p-button label="Retour à la liste" icon="pi pi-arrow-left" styleClass="p-button-secondary p-button-sm" (click)="goBackToList()"></p-button>
+  </div>
+
+  <div *ngIf="loading" class="text-center">
+    <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i> Chargement des détails...
+  </div>
+
+  <div *ngIf="!loading && candidature" class="grid p-fluid p-2">
+
+    <div class="col-12 md:col-6">
+      <h3 class="text-xl text-center font-semibold mb-3">Informations Personnelles</h3>
+      <p-table [value]="[candidature]" [showCurrentPageReport]="false" [paginator]="false" styleClass="p-datatable-sm p-datatable-gridlines mb-4">
+        <ng-template pTemplate="body" let-data>
+          <tr>
+            <td class="font-medium">Nom Complet:</td>
+            <td>{{ data.fullName }}</td>
+          </tr>
+
+          <tr>
+            <td class="font-medium">Numéro de Téléphone:</td>
+            <td>{{ data.phoneNumber || 'N/A' }}</td>
+          </tr>
+
+          <tr>
+            <td class="font-medium">Date Entretien Téléphonique:</td>
+            <td>{{ data.dateEntretienTelephonique ? (data.dateEntretienTelephonique | date:'dd/MM/yyyy HH:mm') : 'N/A' }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+
+    <div class="col-12 md:col-6">
+      <h3 class="text-xl text-center font-semibold mb-3">Détails de la Candidature</h3>
+      <p-table [value]="[candidature]" [showCurrentPageReport]="false" [paginator]="false" styleClass="p-datatable-sm p-datatable-gridlines mb-4">
+        <ng-template pTemplate="body" let-data>
+          <tr>
+            <td class="font-medium">Métier Postulé:</td>
+            <td>{{ data.metierName }}</td>
+          </tr>
+          <tr>
+            <td class="font-medium">Statut Actuel:</td>
+            <td><p-tag [value]="getStatusLabel(data.status)" [severity]="'info'"></p-tag></td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+
+    <div class="col-12">
+      <h3 class="text-xl font-semibold mb-3">Historique des Évaluations</h3>
+      <div class="overflow-x-auto ">
+        <p-table [value]="[candidature]" [showCurrentPageReport]="false" [paginator]="false" styleClass="p-datatable-sm p-datatable-gridlines">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Étape d'Évaluation</th>
+              <th>Notes d'Évaluation</th>
+              <th>Date Prévue d'Entretien</th>
+              <th>Rapport d'Évaluation</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-data>
+            <tr>
+              <td>Évaluation Téléphonique</td>
+              <td>{{ data.evaluationTelephonique || 'N/A' }}</td>
+              <td>{{ data.dateEntretienTelephonique ? (data.dateEntretienTelephonique | date:'dd/MM/yyyy HH:mm') : 'N/A' }}</td>
+              <td>
+                <p-button
+                  *ngIf="data.hasRapportEvaluationTelephonique"
+                  icon="pi pi-download"
+                  styleClass="p-button-rounded p-button-text p-button-sm"
+                  pTooltip="Télécharger Rapport Téléphonique"
+                  (click)="downloadPhoneEvaluationReport(data)"
+                ></p-button>
+                <span *ngIf="!data.hasRapportEvaluationTelephonique">N/A</span>
+              </td>
+            </tr>
+            <tr>
+              <td>1er Entretien Physique</td>
+              <td>{{ data.premiereEvaluationPhysique || 'N/A' }}</td>
+              <td>{{ data.datePremierEntretienPhysique ? (data.datePremierEntretienPhysique | date:'dd/MM/yyyy') : 'N/A' }}</td>
+              <td>
+                <p-button
+                  *ngIf="data.hasRapportPremiereEvaluationPhysique"
+                  icon="pi pi-download"
+                  styleClass="p-button-rounded p-button-text p-button-sm"
+                  pTooltip="Télécharger Rapport 1er Entretien Physique"
+                  (click)="downloadFirstPhysicalInterviewReport(data)"
+                ></p-button>
+                <span *ngIf="!data.hasRapportPremiereEvaluationPhysique">N/A</span>
+              </td>
+            </tr>
+            <tr>
+              <td>2ème Entretien Physique</td>
+              <td>{{ data.deuxiemeEvaluationPhysique || 'N/A' }}</td>
+              <td>{{ data.dateDeuxiemeEntretienPhysique ? (data.dateDeuxiemeEntretienPhysique | date:'dd/MM/yyyy') : 'N/A' }}</td>
+              <td>
+                <p-button
+                  *ngIf="data.hasRapportDeuxiemeEvaluationPhysique"
+                  icon="pi pi-download"
+                  styleClass="p-button-rounded p-button-text p-button-sm"
+                  pTooltip="Télécharger Rapport 2ème Entretien Physique"
+                  (click)="downloadSecondPhysicalInterviewReport(data)"
+                ></p-button>
+                <span *ngIf="!data.hasRapportDeuxiemeEvaluationPhysique">N/A</span>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="4" class="text-center">Aucun historique d'évaluation.</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+
+    <div class="col-12 flex justify-content-end gap-2 mt-4">
+      <p-button label="Modifier" icon="pi pi-pencil" styleClass="p-button-warning" (click)="editCandidature()"></p-button>
+      <p-button label="Démarrer Évaluation" icon="pi pi-arrow-right" styleClass="p-button-primary" (click)="startEvaluation()"></p-button>
+      <p-button label="Télécharger le CV" icon="pi pi-download" styleClass="p-button-info" pTooltip="Télécharger le CV" (click)="downloadCv(candidature)" [disabled]="!candidature.hasCv"></p-button>
+    </div>
+  </div>
+
+  <div *ngIf="!loading && !candidature" class="text-center p-4">
+    <p class="text-red-500">Aucune candidature trouvée avec cet ID.</p>
+  </div>
+</div>

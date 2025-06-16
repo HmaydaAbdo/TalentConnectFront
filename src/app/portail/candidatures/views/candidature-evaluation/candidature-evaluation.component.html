@@ -1,0 +1,234 @@
+<p-toast></p-toast>
+<div class="px-2 py-6 w-screen h-screen overflow-y-scroll">
+
+  <div *ngIf="loading" class="text-center">
+    <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i> Chargement des données...
+  </div>
+
+  <form *ngIf="!loading && candidature" [formGroup]="evaluationForm" (ngSubmit)="onSubmit()" class="p-fluid grid formgrid">
+
+    <!-- Card for ENTRETIEN_TELEPHONIQUE_PLANIFIE status -->
+    <!-- This card is for AFTER the phone interview has been scheduled or is the current step -->
+    <p-card *ngIf="isPhoneInterviewStep" header="Évaluation Téléphonique" styleClass="w-screen m-4 text-center">
+
+      <div class="field flex-grow-1">
+        <label for="evaluationTelephonique" class="block text-900 font-medium ">Notes d'Évaluation Téléphonique:</label>
+        <textarea id="evaluationTelephonique" rows="3" pInputTextarea formControlName="evaluationTelephonique" class="w-full"
+                  [class.ng-invalid]="f['evaluationTelephonique'].invalid && f['evaluationTelephonique'].touched"
+                  [class.ng-dirty]="f['evaluationTelephonique'].touched"
+                  [attr.disabled]="!isPhoneInterviewStep || isFinalStatus ? 'true' : null"></textarea>
+        <small *ngIf="f['evaluationTelephonique'].invalid && f['evaluationTelephonique'].touched" class="p-error">
+          L'évaluation téléphonique est requise pour passer à l'étape suivante.
+        </small>
+      </div>
+      <div class="flex justify-content-around  flex-wrap gap-3 p-4">
+        <div class="field">
+          <label for="dateEntretienTelephonique" class="block text-900 font-medium">Date Entretien Téléphonique:</label>
+          <p-calendar id="dateEntretienTelephonique" formControlName="dateEntretienTelephonique"
+                      dateFormat="dd/mm/yy"  hourFormat="24"
+                      >
+          </p-calendar>
+          <small *ngIf="f['dateEntretienTelephonique'].invalid && f['dateEntretienTelephonique'].touched" class="p-error">
+            La date de l'entretien téléphonique est requise.
+          </small>
+        </div>
+        <div class="field ">
+          <label for="datePremierEntretienPhysique" class="block text-900 font-medium ">Date Premier Entretien Physique:</label>
+          <p-calendar id="datePremierEntretienPhysique" formControlName="datePremierEntretienPhysique"
+                      dateFormat="dd/mm/yy" showIcon="true"
+                      [class.ng-invalid]="f['datePremierEntretienPhysique'].invalid && f['datePremierEntretienPhysique'].touched"
+                      [class.ng-dirty]="f['datePremierEntretienPhysique'].touched"
+                      >
+          </p-calendar>
+          <small *ngIf="f['datePremierEntretienPhysique'].invalid && f['datePremierEntretienPhysique'].touched" class="p-error">
+            La date du premier entretien physique est requise pour passer à l'étape suivante.
+          </small>
+        </div>
+        <div class="field   ">
+          <label for="status-phone" class="block text-900 font-medium mb-2">Statut </label>
+          <p-dropdown id="status-phone" [options]="statusOptions" optionLabel="label" optionValue="value"
+                      placeholder="Sélectionner le nouveau statut" formControlName="status"
+                      [class.ng-invalid]="f['status'].invalid && f['status'].touched" [class.ng-dirty]="f['status'].touched"
+                   ></p-dropdown>
+          <small *ngIf="f['status'].invalid && f['status'].touched" class="p-error">Le statut est requis.</small>
+        </div>
+        <div class="field ">
+          <label for="phoneReportFile" class="block text-900 font-medium mb-2">Rapport d'Évaluation Téléphonique:</label>
+          <div class="p-inputgroup">
+            <p-fileUpload name="phoneReportFile[]" accept=".pdf,.doc,.docx,.png,.jpg,.jpeg"
+                          [multiple]="false" [auto]="false"
+                          (onSelect)="onPhoneReportFileSelect($event)"
+                          (onClear)="phoneReportFile = null"
+                          [disabled]="!isPhoneInterviewStep || isFinalStatus"
+                          mode="basic" chooseLabel="Choisir Fichier">
+            </p-fileUpload>
+            <p-button *ngIf="candidature?.hasRapportEvaluationTelephonique"
+                      icon="pi pi-download" styleClass="p-button-secondary"
+                      pTooltip="Télécharger le rapport existant"
+                      (click)="downloadReport('phone')"
+                      [disabled]="!candidature?.hasRapportEvaluationTelephonique"></p-button>
+            <p-button *ngIf="candidature?.hasRapportEvaluationTelephonique"
+                      icon="pi pi-trash" styleClass="p-button-danger p-button-outlined"
+                      pTooltip="Supprimer le rapport existant"
+                      (click)="deleteReport('phone')"
+                      [disabled]="!candidature?.hasRapportEvaluationTelephonique"></p-button>
+          </div>
+        </div>
+      </div>
+
+
+
+      <div class="gap-5 flex justify-content-center ">
+        <p-button type="submit" icon="pi pi-check" label="Enregistrer l'Évaluation" styleClass="p-button-success"></p-button>
+        <p-button label="Annuler" icon="pi pi-times" styleClass="p-button-secondary" (click)="goBack()"></p-button>
+      </div>
+
+    </p-card>
+
+    <p-card *ngIf="isFirstPhysicalInterviewStep"
+            header="Première Évaluation Physique" styleClass="m-4 text-center w-screen">
+      <div class="field ">
+        <label for="premiereEvaluationPhysique" class="block text-900 font-medium mb-2">Notes Première Évaluation Physique:</label>
+        <textarea id="premiereEvaluationPhysique" rows="3" pInputTextarea formControlName="premiereEvaluationPhysique" class="w-full"
+                  [class.ng-invalid]="f['premiereEvaluationPhysique'].invalid && f['premiereEvaluationPhysique'].touched"
+                  [class.ng-dirty]="f['premiereEvaluationPhysique'].touched"
+                  [attr.disabled]="!isFirstPhysicalInterviewStep || isFinalStatus ? 'true' : null"></textarea>
+        <small *ngIf="f['premiereEvaluationPhysique'].invalid && f['premiereEvaluationPhysique'].touched" class="p-error">
+          La première évaluation physique est requise pour passer à l'étape suivante.
+        </small>
+      </div>
+      <div class="flex justify-content-between  flex-wrap gap-3 p-4">
+
+        <div class="field">
+          <label for="status-first-physical" class="block text-900 font-medium mb-2">Statut <span class="text-red-500">*</span></label>
+          <p-dropdown id="status-first-physical" [options]="statusOptions" optionLabel="label" optionValue="value"
+                      placeholder="Sélectionner le nouveau statut" formControlName="status"
+                      [class.ng-invalid]="f['status'].invalid && f['status'].touched" [class.ng-dirty]="f['status'].touched"
+                   ></p-dropdown>
+          <small *ngIf="f['status'].invalid && f['status'].touched" class="p-error">Le statut est requis.</small>
+        </div>
+
+        <div class="field">
+          <label for="dateDeuxiemeEntretienPhysique" class="block text-900 font-medium mb-2">Date Deuxième Entretien Physique:</label>
+          <p-calendar id="dateDeuxiemeEntretienPhysique" formControlName="dateDeuxiemeEntretienPhysique"
+                      dateFormat="dd/mm/yy" showIcon="true"
+                      [class.ng-invalid]="f['dateDeuxiemeEntretienPhysique'].invalid && f['dateDeuxiemeEntretienPhysique'].touched"
+                      [class.ng-dirty]="f['dateDeuxiemeEntretienPhysique'].touched"
+                     >
+          </p-calendar>
+          <small *ngIf="f['dateDeuxiemeEntretienPhysique'].invalid && f['dateDeuxiemeEntretienPhysique'].touched" class="p-error">
+            La date du deuxième entretien physique est requise pour passer à l'étape suivante.
+          </small>
+        </div>
+
+        <div class="field ">
+          <label for="firstPhysicalReportFile" class="block text-900 font-medium mb-2">Rapport 1ère Évaluation Physique:</label>
+          <div class="p-inputgroup">
+            <p-fileUpload name="firstPhysicalReportFile[]" accept=".pdf,.doc,.docx,.png,.jpg,.jpeg" [multiple]="false" [auto]="false"
+                          (onSelect)="onFirstPhysicalReportFileSelect($event)" (onClear)="firstPhysicalReportFile = null"
+                          [disabled]="!isFirstPhysicalInterviewStep || isFinalStatus"
+                          mode="basic" chooseLabel="Choisir Fichier">
+            </p-fileUpload>
+            <p-button *ngIf="candidature?.hasRapportPremiereEvaluationPhysique"
+                      icon="pi pi-download" styleClass="p-button-secondary"
+                      pTooltip="Télécharger le rapport existant"
+                      (click)="downloadReport('first')"
+                      [disabled]="!candidature?.hasRapportPremiereEvaluationPhysique"></p-button>
+            <p-button *ngIf="candidature?.hasRapportPremiereEvaluationPhysique"
+                      icon="pi pi-trash" styleClass="p-button-danger p-button-outlined"
+                      pTooltip="Supprimer le rapport existant"
+                      (click)="deleteReport('first')"
+                      [disabled]="!candidature?.hasRapportPremiereEvaluationPhysique"></p-button>
+          </div>
+        </div>
+      </div>
+
+      <div class="gap-5 flex justify-content-center mt-4">
+        <p-button type="submit" icon="pi pi-check" label="Enregistrer l'Évaluation" styleClass="p-button-success"></p-button>
+        <p-button label="Annuler" icon="pi pi-times" styleClass="p-button-secondary" (click)="goBack()"></p-button>
+      </div>
+
+    </p-card>
+
+    <p-card *ngIf="isSecondPhysicalInterviewStep" header="Deuxième Évaluation Physique" styleClass="m-4 text-center w-screen">
+      <div class="field ">
+        <label for="deuxiemeEvaluationPhysique" class="block text-900 font-medium mb-2">Notes Deuxième Évaluation Physique:</label>
+        <textarea id="deuxiemeEvaluationPhysique" rows="3" pInputTextarea formControlName="deuxiemeEvaluationPhysique" class="w-full"
+                  [class.ng-invalid]="f['deuxiemeEvaluationPhysique'].invalid && f['deuxiemeEvaluationPhysique'].touched"
+                  [class.ng-dirty]="f['deuxiemeEvaluationPhysique'].touched"
+                  [attr.disabled]="!isSecondPhysicalInterviewStep || isFinalStatus ? 'true' : null"></textarea>
+        <small *ngIf="f['deuxiemeEvaluationPhysique'].invalid && f['deuxiemeEvaluationPhysique'].touched" class="p-error">
+          La deuxième évaluation physique est requise pour finaliser la candidature.
+        </small>
+      </div>
+      <div class="flex justify-content-center  flex-wrap gap-3 p-4">
+
+        <div class="field ">
+          <label for="status-second-physical" class="block text-900 font-medium mb-2">Statut</label>
+          <p-dropdown id="status-second-physical" [options]="statusOptions" optionLabel="label" optionValue="value"
+                      placeholder="Sélectionner le nouveau statut" formControlName="status"
+                      [class.ng-invalid]="f['status'].invalid && f['status'].touched" [class.ng-dirty]="f['status'].touched"
+                      ></p-dropdown>
+          <small *ngIf="f['status'].invalid && f['status'].touched" class="p-error">Le statut est requis.</small>
+        </div>
+
+        <div class="field">
+          <label for="secondPhysicalReportFile" class="block text-900 font-medium mb-2">Rapport 2ème Évaluation Physique:</label>
+          <div class="p-inputgroup">
+            <p-fileUpload name="secondPhysicalReportFile[]" accept=".pdf,.doc,.docx,.png,.jpg,.jpeg" [multiple]="false" [auto]="false"
+                          (onSelect)="onSecondPhysicalReportFileSelect($event)" (onClear)="secondPhysicalReportFile = null"
+                          [disabled]="!isSecondPhysicalInterviewStep || isFinalStatus"
+                          mode="basic" chooseLabel="Choisir Fichier">
+            </p-fileUpload>
+            <p-button *ngIf="candidature?.hasRapportDeuxiemeEvaluationPhysique"
+                      icon="pi pi-download" styleClass="p-button-secondary"
+                      pTooltip="Télécharger le rapport existant"
+                      (click)="downloadReport('second')"
+                      [disabled]="!candidature?.hasRapportDeuxiemeEvaluationPhysique"></p-button>
+            <p-button *ngIf="candidature?.hasRapportDeuxiemeEvaluationPhysique"
+                      icon="pi pi-trash" styleClass="p-button-danger p-button-outlined"
+                      pTooltip="Supprimer le rapport existant"
+                      (click)="deleteReport('second')"
+                      [disabled]="!candidature?.hasRapportDeuxiemeEvaluationPhysique"></p-button>
+          </div>
+        </div>
+      </div>
+
+      <div class="gap-5 flex justify-content-center mt-4">
+        <p-button type="submit" icon="pi pi-check" label="Enregistrer l'Évaluation" styleClass="p-button-success"></p-button>
+        <p-button label="Annuler" icon="pi pi-times" styleClass="p-button-secondary" (click)="goBack()"></p-button>
+      </div>
+
+    </p-card>
+
+    <p-card *ngIf="isFinalStatus" header="Candidature Évaluée" styleClass="m-4 text-center w-screen">
+      <div class="flex justify-content-center align-items-center flex-wrap gap-3 p-4">
+        <div class="field w-full">
+          <label class="block text-900 font-medium mb-2">Statut final de la candidature :
+            <p-tag [value]="getStatusLabel(candidature.status)" [severity]="getStatusSeverity(candidature.status)"></p-tag>
+          </label>
+          <div *ngIf="candidature.evaluationTelephonique">
+            <p class="font-medium mt-3">Notes Entretien Téléphonique:</p>
+            <p>{{ candidature.evaluationTelephonique }}</p>
+          </div>
+          <div *ngIf="candidature.premiereEvaluationPhysique">
+            <p class="font-medium mt-3">Notes 1ère Évaluation Physique:</p>
+            <p>{{ candidature.premiereEvaluationPhysique }}</p>
+          </div>
+          <div *ngIf="candidature.deuxiemeEvaluationPhysique">
+            <p class="font-medium mt-3">Notes 2ème Évaluation Physique:</p>
+            <p>{{ candidature.deuxiemeEvaluationPhysique }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="gap-5 flex justify-content-center ">
+        <p-button label="Retour aux Candidatures" icon="pi pi-arrow-left" styleClass="p-button-secondary" (click)="goBack()"></p-button>
+      </div>
+    </p-card>
+
+  </form>
+
+  <div *ngIf="!loading && !candidature" class="text-center p-4">
+    <p class="text-red-500">Aucune candidature trouvée avec cet ID pour évaluation.</p>
+  </div>
+</div>

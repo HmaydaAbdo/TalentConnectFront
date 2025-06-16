@@ -1,0 +1,43 @@
+/* src/app/candidatures/candidature-list/candidature-list.component.scss */
+
+/* Basic container padding for PrimeFlex */
+.card {
+  background: var(--surface-card);
+  padding: 2rem;
+  border-radius: 10px;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Adjustments for responsive table actions */
+@media screen and (max-width: 960px) {
+  .p-datatable-responsive-demo .p-datatable-tbody > tr > td {
+    text-align: left;
+    display: block;
+    width: 100%;
+  }
+
+  .p-datatable-responsive-demo .p-datatable-tbody > tr > td:nth-child(even) {
+    background-color: var(--surface-hover);
+  }
+
+  .p-datatable-responsive-demo .p-datatable-tbody > tr > td:last-child {
+    border-bottom: 1px solid var(--surface-d);
+  }
+}
+
+/* Ensure dropdowns fit well in smaller screens */
+.p-dropdown {
+  width: 100% !important; /* Override default inline styles if any */
+}
+
+/* Adjustments for filter layout on small screens */
+.grid.formgrid .field {
+  margin-bottom: 1rem; /* Spacing between fields */
+}
+
+/* Styling for the dynamic action button if needed */
+.p-button.p-button-sm {
+  font-size: 0.875rem; /* Smaller font for these buttons */
+  padding: 0.5rem 0.75rem; /* Adjust padding */
+}

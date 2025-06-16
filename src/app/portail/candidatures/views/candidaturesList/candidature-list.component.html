@@ -1,0 +1,101 @@
+<div class="card p-4">
+  <p-toast></p-toast>
+  <p-confirmDialog></p-confirmDialog>
+
+  <div class="flex align-items-center justify-content-between mb-4">
+    <h2 class="text-2xl font-bold">Gestion des Candidatures</h2>
+    <p-button label="Ajouter une Nouvelle Candidature" icon="pi pi-plus" styleClass="p-button-success" (click)="addNewCandidature()"></p-button>
+  </div>
+
+  <div class="p-fluid grid formgrid mb-4" [formGroup]="criteriaForm">
+    <div class="field col-12 md:col-6 lg:col-3">
+      <label for="fullName" class="block text-900 font-medium mb-2">Nom Complet</label>
+      <input id="fullName" type="text" pInputText formControlName="fullName" placeholder="Rechercher par nom complet">
+    </div>
+
+    <div class="field col-12 md:col-6 lg:col-3">
+      <label for="phoneNumber" class="block text-900 font-medium mb-2">Numéro de Téléphone</label>
+      <input id="phoneNumber" type="text" pInputText formControlName="phoneNumber" placeholder="Rechercher par numéro de téléphone">
+    </div>
+
+    <div class="field col-12 md:col-6 lg:col-3">
+      <label for="metier" class="block text-900 font-medium mb-2">Métier</label>
+      <p-dropdown id="metier" [options]="metiers" optionLabel="metierName" optionValue="id" placeholder="Sélectionner un Métier" formControlName="metierId" [showClear]="true"></p-dropdown>
+    </div>
+
+    <div class="field col-12 md:col-6 lg:col-3">
+      <label for="status" class="block text-900 font-medium mb-2">Statut</label>
+      <p-dropdown id="status" [options]="statuses" optionLabel="label" optionValue="value" placeholder="Sélectionner un Statut" formControlName="status" [showClear]="true"></p-dropdown>
+    </div>
+
+
+    <div class="col-12 flex justify-content-end">
+      <p-button label="Effacer les Filtres" icon="pi pi-times" styleClass="p-button-secondary p-button-sm" (click)="clearFilters()"></p-button>
+    </div>
+  </div>
+
+  <p-table
+    [value]="candidatures"
+    [paginator]="true"
+    [rows]="size"
+    [totalRecords]="totalRecords"
+    [loading]="loading"
+    [lazy]="true"
+    (onLazyLoad)="onPageChange($event)"
+    (onSort)="onSort($event)"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    [globalFilterFields]="['fullName', 'phoneNumber', 'metierName', 'status', 'dateEntretienTelephonique']"
+    dataKey="id"
+    styleClass="p-datatable-gridlines p-datatable-striped"
+    [responsive]="true"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="fullName">Nom Complet <p-sortIcon field="fullName"></p-sortIcon></th>
+        <th pSortableColumn="phoneNumber">Numéro de Téléphone <p-sortIcon field="phoneNumber"></p-sortIcon></th>
+        <th pSortableColumn="metierName">Métier <p-sortIcon field="metierName"></p-sortIcon></th>
+        <th>CV</th>
+        <th>Prochaine Étape</th>
+        <th style="width: 15%;">Actions</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-candidature>
+      <tr>
+        <td>{{ candidature.fullName }}</td>
+        <td>{{ candidature.phoneNumber }}</td>
+        <td>{{ candidature.metierName }}</td>
+        <td class="white-space-nowrap"><p-tag [value]="getStatusLabel(candidature.status)" [severity]="getStatusSeverity(candidature.status)"></p-tag></td>
+        <td>
+          <div class="flex gap-2">
+            <p-button
+              icon="pi pi-download"
+              styleClass="p-button-rounded p-button-text p-button-sm"
+              pTooltip="Télécharger le CV"
+              (click)="downloadCv(candidature)"
+              [disabled]="!candidature.hasCv" ></p-button>
+          </div>
+        </td>
+        <td>
+          <div class="flex gap-2">
+            <p-button
+              [label]="getDynamicActionLabel(candidature.status)"
+              icon="pi pi-arrow-right"
+              [styleClass]="candidature.status === CandidatureStatus.EMBAUCHE || candidature.status === CandidatureStatus.REJETE ? 'p-button-rounded p-button-info white-space-nowrap' : 'p-button-rounded p-button-warning white-space-nowrap'"
+              (click)="handleDynamicAction(candidature)"
+            ></p-button>
+          </div>
+        </td>
+        <td>
+          <div class="flex gap-2">
+            <p-button icon="pi pi-eye" styleClass="p-button-rounded p-button-info white-space-nowrap" pTooltip="Voir les Détails" (click)="viewDetails(candidature.id)"></p-button>
+            <p-button icon="pi pi-trash" styleClass="p-button-rounded p-button-danger white-space-nowrap" pTooltip="Supprimer la Candidature" (click)="deleteCandidature(candidature.id, candidature.fullName)"></p-button>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td [attr.colspan]="8" class="text-center">Aucune candidature trouvée.</td> </tr>
+    </ng-template>
+  </p-table>
+</div>

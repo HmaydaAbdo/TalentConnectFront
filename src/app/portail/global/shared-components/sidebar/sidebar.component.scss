@@ -1,0 +1,38 @@
+
+.sidebar-link {
+  text-decoration: none;
+  color: var(--text-color-secondary, #6b7280) !important;
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+  border-radius: var(--border-radius, 0.5rem) !important;
+}
+
+
+
+.active-sidebar-link .font-medium {
+  text-decoration: underline;
+  text-decoration-color: rgb(30, 92, 172);
+  text-underline-offset: 0.7rem;
+  text-decoration-thickness: 1rem; /* Épaisseur de la ligne */
+  /* Pas besoin de `color` ici, car elle est déjà héritée du `.active-sidebar-link` parent */
+}
+
+// Les autres styles de la sidebar restent inchangés
+// Styles pour les éléments de sous-menu qui ne sont pas des liens directs
+// Assure-toi que les div qui gèrent les sous-menus ont aussi des styles appropriés
+.p-sidebar .p-sidebar-content .p-ripple.text-600 {
+  &:hover {
+    background-color: var(--blue-50, #e3f2fd) !important;
+    border-radius: var(--border-radius, 0.5rem);
+  }
+}
+
+// Transition pour les sous-menus (basé sur le slideup/slidedown de Primeng)
+.slidedown {
+  transition: max-height 0.3s ease-out;
+  max-height: 500px;
+}
+
+.slideup {
+  transition: max-height 0.3s ease-in;
+  max-height: 0;
+}

@@ -1,0 +1,121 @@
+<p-toast></p-toast>
+<p-confirmDialog></p-confirmDialog>
+
+<div class="card p-4">
+
+  <div class="flex justify-content-end align-items-center ">
+    <p-button label="Nouveau Métier" icon="pi pi-plus" (onClick)="showCreateDialog()" pRipple></p-button>
+  </div>
+
+  <div class=" p-3 shadow-1 border-round ">
+    <!-- Removed (ngSubmit)="onSearch()" as search is now instant with debounce -->
+    <form [formGroup]="searchForm">
+      <div class="flex gap-2 align-items-center mt-3">
+        <div class="flex flex-column">
+          <label for="searchMetierName" class="font-medium  text-center text-900">Titre</label>
+          <input
+            pInputText
+            id="searchMetierName"
+            type="text"
+            formControlName="searchMetierName" placeholder="filtrer par titre..."
+          />
+        </div>
+        <div class="flex flex-column">
+          <label for="searchDescription" class="font-medium text-center text-900">Description</label>
+          <input
+            pInputText
+            id="searchDescription"
+            type="text"
+            formControlName="searchDescription" placeholder="Filtrer par description ..."
+          />
+        </div>
+
+      </div>
+    </form>
+  </div>
+
+  <div class="surface-card p-4 shadow-1 border-round">
+    <p-table
+      [value]="metiers"
+      [lazy]="true"
+      (onLazyLoad)="onPageChange($event)"
+      [paginator]="true"
+      [rows]="criteria.size"
+      [totalRecords]="pageResponse?.totalElements || 0"
+      [rowsPerPageOptions]="[5, 10, 20, 50]"
+      [sortField]="criteria.sortBy"
+      [sortOrder]="criteria.sortDirection === 'asc' ? 1 : -1"
+      (onSort)="onSort($event)"
+      dataKey="id"
+      styleClass="p-datatable-gridlines p-datatable-sm"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="metierName">Titre <p-sortIcon field="metierName"></p-sortIcon></th>
+          <th pSortableColumn="description">Description <p-sortIcon field="description"></p-sortIcon></th>
+          <th style="width: 150px;">Actions</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-metier>
+        <tr>
+          <td>{{ metier.metierName }}</td>
+          <td>{{ metier.description }}</td>
+          <td>
+            <p-button icon="pi pi-pencil" styleClass="p-button-rounded p-button-info mr-2" (onClick)="showEditDialog(metier)" pRipple></p-button>
+            <p-button icon="pi pi-trash" styleClass="p-button-rounded p-button-danger" (onClick)="confirmDelete(metier)" pRipple></p-button>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="4" class="text-center">No metiers found.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+  <p-dialog
+    [(visible)]="displayDialog"
+    [style]="{ width: '50vw' }"
+    [baseZIndex]="10000"
+    [header]="isEditing ? 'Modifier un Metier existant' : 'Ajouter un Nouveau Métier'"
+    [modal]="true"
+    styleClass="p-fluid"
+  >
+    <form [formGroup]="metierForm">
+      <div class="field mb-3">
+        <label for="metierNameInput" class="font-medium text-900">Titre<span class="p-error">*</span></label>
+        <input
+          pInputText
+          id="metierNameInput"
+          type="text"
+          formControlName="metierName"
+          [ngClass]="{ 'ng-invalid ng-dirty': formControls['metierName'].invalid && (formControls['metierName'].touched || formControls['metierName'].dirty) }"
+        />
+        <small class="p-error" *ngIf="formControls['metierName'].invalid && (formControls['metierName'].touched || formControls['metierName'].dirty)">
+          <span *ngIf="formControls['metierName'].errors?.['required']">Titre du métier est obligatoire.</span>
+
+        </small>
+      </div>
+
+      <div class="field mb-3">
+        <label for="descriptionInput" class="font-medium text-900">Description</label>
+        <textarea
+          pInputTextarea
+          id="descriptionInput"
+          formControlName="description"
+          rows="3"
+          [ngClass]="{ 'ng-invalid ng-dirty': formControls['description'].invalid && (formControls['description'].touched || formControls['description'].dirty) }"
+        ></textarea>
+        <small class="p-error" *ngIf="formControls['description'].invalid && (formControls['description'].touched || formControls['description'].dirty)">
+          <span *ngIf="formControls['description'].errors?.['maxlength']">Description cannot exceed 1000 characters.</span>
+        </small>
+      </div>
+    </form>
+
+    <ng-template pTemplate="footer">
+      <p-button label="Annuler" icon="pi pi-times" styleClass="p-button-text" (onClick)="displayDialog=false" pRipple></p-button>
+      <p-button [label]="isEditing ? 'Modifier' : 'Ajouter'" icon="pi pi-check" (onClick)="onSubmitForm()" pRipple></p-button>
+    </ng-template>
+  </p-dialog>
+</div>

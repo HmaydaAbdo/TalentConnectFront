@@ -1,0 +1,28 @@
+<div class=" navbar w-screen flex justify-content-between p-3 border border-bottom-1 ">
+
+  <div class="flex align-items-center">
+    <img src="assets/logo.png" alt="Your Logo" class="block mx-auto" style="height: 5rem; width: 13.7rem;" />
+  </div>
+
+  <div>
+    <nav class="hidden lg:flex  align-items-center">
+      <ul class="list-none flex justify-content-between">
+        <li *ngFor="let item of filteredMenuItems">
+          <a pRipple [routerLink]="item.routerLink" routerLinkActive="active-nav-link"
+             class="flex align-items-center nav-link hover:bg-blue-50 border-round-xl">
+
+            <span class="ml-2 nav-label">{{ item.label }}</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+  <div class="flex gap-2 align-items-center">
+    <p-button icon="pi pi-bars" styleClass="p-button-info p-button-outlined" (onClick)="openSidebar.emit()" pTooltip="Ouvrir le menu de navigation principale" tooltipPosition="bottom"></p-button>
+    <p-button icon="pi pi-power-off" styleClass="p-button-danger p-button-outlined" [loading]="loading" (onClick)="confirmLogout($event)" pTooltip="Se déconnecter de votre compte" tooltipPosition="bottom"></p-button>
+  </div>
+
+</div>
+
+<p-confirmDialog header="Confirmer la déconnexion" icon="pi pi-exclamation-triangle"></p-confirmDialog>
