@@ -21,7 +21,8 @@
       <div class="field">
         <label for="phoneNumber" class="block text-900 font-medium mb-2">Numéro de Téléphone</label>
         <p-inputMask id="phoneNumber" formControlName="phoneNumber" mask="9999999999" placeholder="Ex: 0612345678"></p-inputMask>
-        <small *ngIf="f['phoneNumber'].invalid && f['phoneNumber'].touched" class="p-error">Le numéro de téléphone doit être composé de 10 chiffres.</small>
+        <small *ngIf="f['phoneNumber'].hasError('required') && f['phoneNumber'].touched" class="p-error">Le numéro de téléphone est obligatoire.</small>
+        <small *ngIf="f['phoneNumber'].hasError('pattern') && f['phoneNumber'].touched" class="p-error">Le numéro de téléphone doit contenir exactement 10 chiffres.</small>
       </div>
     </div>
 

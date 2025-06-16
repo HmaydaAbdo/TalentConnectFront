@@ -77,12 +77,10 @@ export class CandidatureFormComponent implements OnInit, OnDestroy {
 
   initializeForm(): void {
     this.candidatureForm = this.fb.group({
-      fullName: new FormControl('', Validators.required),
-      phoneNumber: new FormControl(''),
+      fullName: new FormControl('', [Validators.required, Validators.pattern(/^\d{10}$/)]),
+      phoneNumber: new FormControl('',Validators.required),
       metierId: new FormControl(null, Validators.required),
-      // --- NEW FIELD ---
-      dateEntretienTelephonique: new FormControl(null) // New form control for the date
-      // --- END NEW FIELD ---
+      dateEntretienTelephonique: new FormControl(null)
     });
   }
 
@@ -120,16 +118,12 @@ export class CandidatureFormComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (candidature) => {
           this.candidatureDetails = candidature;
-          // When patching values, convert ISO string to Date object for p-calendar
           const dateEntretien = candidature.dateEntretienTelephonique ? new Date(candidature.dateEntretienTelephonique) : null;
-
           this.candidatureForm.patchValue({
             fullName: candidature.fullName,
             phoneNumber: candidature.phoneNumber,
             metierId: candidature.metierId,
-            // --- NEW FIELD PATCH ---
             dateEntretienTelephonique: dateEntretien
-            // --- END NEW FIELD PATCH ---
           });
           this.loading = false;
         },
@@ -160,7 +154,6 @@ export class CandidatureFormComponent implements OnInit, OnDestroy {
     const formValue = this.candidatureForm.value;
     const request: CandidatureRequest = {
       ...formValue,
-      // Convert Date object from p-calendar to ISO 8601 string for backend
       dateEntretienTelephonique: formValue.dateEntretienTelephonique ? (formValue.dateEntretienTelephonique as Date).toISOString() : undefined
     };
 
