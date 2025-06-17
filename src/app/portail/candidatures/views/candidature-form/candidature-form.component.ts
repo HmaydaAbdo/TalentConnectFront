@@ -77,8 +77,8 @@ export class CandidatureFormComponent implements OnInit, OnDestroy {
 
   initializeForm(): void {
     this.candidatureForm = this.fb.group({
-      fullName: new FormControl('', [Validators.required, Validators.pattern(/^\d{10}$/)]),
-      phoneNumber: new FormControl('',Validators.required),
+      fullName: new FormControl('', [Validators.required ]),
+      phoneNumber: new FormControl('',[Validators.required,Validators.pattern(/^\d{10}$/)]),
       metierId: new FormControl(null, Validators.required),
       dateEntretienTelephonique: new FormControl(null)
     });
